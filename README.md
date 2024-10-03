@@ -9,9 +9,7 @@ This project is a frontend application built using React, Tailwind CSS, and `rea
 - [Features](#features)
 - [Setup](#setup)
 - [Running the Project](#running-the-project)
-- [Folder Structure](#folder-structure)
-- [Screenshots](#screenshots)
-- [License](#license)
+
 
 ## Technologies Used
 
