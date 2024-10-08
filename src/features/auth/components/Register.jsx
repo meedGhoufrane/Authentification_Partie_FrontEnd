@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../layouts/AuthLayout';
 import axiosInstance from '../../../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { ThemeContext } from '../../../ThemeContext'; // Import ThemeContext for dark/light mode
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -15,6 +16,7 @@ const Register = () => {
   const [phonenumber, setPhoneNumber] = useState('');
   const [role, setRole] = useState('user');
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext); // Access the current theme
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +38,6 @@ const Register = () => {
       });
 
       console.log("Registration successful", response.data);
-
       toast.success("Registration successful! Please verify your email.");
       navigate('/auth/login', { state: { email, verifyMethod: 'otp', showToast: true } });
 
@@ -56,16 +57,15 @@ const Register = () => {
 
   return (
     <AuthLayout>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <form onSubmit={handleSubmit} className="bg-white p-8 shadow-md rounded-lg">
-          <h2 className="text-2xl font-bold mb-4 text-center">Register</h2>
+        <form onSubmit={handleSubmit} className={`bg-white dark:bg-gray-800 p-8 shadow-md rounded-lg w-full max-w-md transition duration-300`}>
+          <h2 className={`text-2xl font-bold mb-4 text-center ext-2xl font-bold text-gray-800 dark:text-gray-200 `}>Register</h2>
 
           <input
             type="text"
             placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -73,7 +73,7 @@ const Register = () => {
             placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -81,7 +81,7 @@ const Register = () => {
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -89,7 +89,7 @@ const Register = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -97,7 +97,7 @@ const Register = () => {
             placeholder="Confirm Password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -105,7 +105,7 @@ const Register = () => {
             placeholder="Address"
             value={adresse}
             onChange={(e) => setAdresse(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <input
@@ -113,23 +113,22 @@ const Register = () => {
             placeholder="Phone Number"
             value={phonenumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
             required
           />
           <select
             value={role}
             onChange={(e) => setRole(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className={`w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition duration-300`}
           >
             <option value="user">User</option>
             <option value="manager">Manager</option>
           </select>
-          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded">
+          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition duration-300">
             Register
           </button>
         </form>
         <ToastContainer />
-      </div>
     </AuthLayout>
   );
 };
