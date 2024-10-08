@@ -5,7 +5,6 @@ import Register from './features/auth/components/Register';
 import ForgotPassword from './features/auth/components/ForgotPassword';
 import ResetPassword from './features/auth/components/ResetPassword';
 import HomePage from './page/HomePage';
-import './index.css';
 
 function App() {
   return (

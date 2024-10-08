@@ -1,8 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
+
 const AuthLayout = ({ children }) => {
   return (
+
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <header className="bg-white shadow-md">
