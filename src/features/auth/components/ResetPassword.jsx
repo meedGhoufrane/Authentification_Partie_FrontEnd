@@ -1,45 +1,66 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '../../../api/axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import AuthLayout from '../layouts/AuthLayout';
+
 
 const ResetPassword = () => {
-  const { token } = useParams(); // Get reset token from URL
-  const [newPassword, setNewPassword] = useState('');
+  const { token } = useParams(); // Retrieve the token from the URL
+  const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      console.log("Passwords do not match");
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
-    console.log("Resetting password with", { token, newPassword });
-    // Handle reset password logic (e.g., send new password to backend API with the token)
+
+    try {
+      const response = await axiosInstance.post(`/api/auth/reset-password`, {
+        token,
+        password,
+      });
+
+      toast.success("Password has been reset successfully");
+      navigate('/auth/login');
+    } catch (error) {
+      toast.error("An error occurred while resetting the password");
+    }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <form onSubmit={handleSubmit} className="bg-white p-8 shadow-md rounded-lg w-96">
-        <h2 className="text-2xl font-bold mb-4 text-center">Reset Password</h2>
-        <p className="text-gray-600 text-center mb-6">Enter your new password below.</p>
+    <AuthLayout>
+    <div className="flex items-center justify-center min-h-screen">
+      <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-8 shadow-md rounded-lg w-full max-w-md transition">
+        <h2 className="text-2xl font-bold mb-4 text-center text-gray-800">Reset Password</h2>
         <input
           type="password"
           placeholder="New Password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition"
+          required
         />
         <input
           type="password"
           placeholder="Confirm New Password"
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
+          className="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition"
+          required
         />
-        <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+        <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition">
           Reset Password
         </button>
+        <ToastContainer />
       </form>
     </div>
+    </AuthLayout>
   );
 };
 

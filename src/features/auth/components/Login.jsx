@@ -1,64 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom'; 
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthLayout from '../layouts/AuthLayout';
 import axiosInstance from '../../../api/axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { ThemeContext } from '../../../ThemeContext'; // Import ThemeContext for dark/light mode
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const location = useLocation();
+  const { theme } = useContext(ThemeContext); // Access the current theme
 
-  useEffect(() => {
-    if (location.state?.showToast) {
-      toast.info("Please verify your email using the OTP sent to your email address.");
-    }
-  }, [location.state]);
-
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const response = await axiosInstance.post(`/api/auth/login`, {
-        email,
-        password,
-      });
-
-      if (response.data.success) {
-        toast.success("Login successful!");
-        localStorage.setItem('token', response.data.token); 
-        navigate('/'); 
-      } else {
-        toast.error("Login failed. Please check your credentials.");
-      }
+      const response = await axiosInstance.post('/api/auth/login', { email, password });
+      toast.success("Login successful!");
+      navigate('/');
     } catch (error) {
       console.error("Login error:", error);
-
-     
-      if (error.response) {
-        const errorMessage = error.response.data?.message || "Login failed. Please try again.";
-        toast.error(errorMessage);
-      } else if (error.request) {
-        toast.error("No response from the server. Please check your network connection.");
-      } else {
-        toast.error("An error occurred while logging in. Please try again.");
-      }
+      const errorMessage = error.response?.data?.message || "An error occurred during login";
+      toast.error(errorMessage);
     }
   };
 
   return (
     <AuthLayout>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <form onSubmit={handleLogin} className="bg-white p-8 shadow-md rounded-lg">
-          <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+      <div className="flex items-center justify-center min-h-screen">
+        <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-8 shadow-md rounded-lg w-full max-w-md transition">
+          <h2
+            className="text-2xl font-bold mb-4 text-center"
+            style={{ color: theme === 'dark' ? 'white' : 'black' }} // Inline style to confirm color change
+          >
+            Login
+          </h2>
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition"
             required
           />
           <input
@@ -66,15 +48,20 @@ const Login = () => {
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full p-2 mb-4 border border-gray-300 rounded"
+            className="w-full p-2 mb-4 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-600 dark:text-white transition"
             required
           />
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
+          <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition">
             Login
           </button>
+          <div className="mt-4 text-center">
+            <a href="/auth/forgot-password" className={`text-blue-500 ${theme === 'dark' ? 'text-white' : 'text-blue-600'}`}>
+              Forgot Password?
+            </a>
+          </div>
         </form>
-        <ToastContainer />
       </div>
+      <ToastContainer />
     </AuthLayout>
   );
 };
