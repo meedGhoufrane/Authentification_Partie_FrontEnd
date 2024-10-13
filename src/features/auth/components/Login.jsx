@@ -10,7 +10,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext); // Access the current theme
+  const { darkMode } = useContext(ThemeContext); // Access darkMode from ThemeContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,10 +29,7 @@ const Login = () => {
     <AuthLayout>
       <div className="flex items-center justify-center min-h-screen">
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-8 shadow-md rounded-lg w-full max-w-md transition">
-          <h2
-            className="text-2xl font-bold mb-4 text-center"
-            style={{ color: theme === 'dark' ? 'white' : 'black' }} // Inline style to confirm color change
-          >
+          <h2 className={`text-2xl font-bold mb-4 text-center ${darkMode ? 'text-white' : 'text-black'}`}>
             Login
           </h2>
           <input
@@ -55,7 +52,7 @@ const Login = () => {
             Login
           </button>
           <div className="mt-4 text-center">
-            <a href="/auth/forgot-password" className={`text-blue-500 ${theme === 'dark' ? 'text-white' : 'text-blue-600'}`}>
+            <a href="/auth/forgot-password" className={`text-blue-500 ${darkMode ? 'text-white' : 'text-blue-600'}`}>
               Forgot Password?
             </a>
           </div>

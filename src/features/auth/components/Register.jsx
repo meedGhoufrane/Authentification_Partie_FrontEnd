@@ -4,8 +4,8 @@ import AuthLayout from '../layouts/AuthLayout';
 import axiosInstance from '../../../api/axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ThemeContext } from '../../../ThemeContext'; // Import ThemeContext for dark/light mode
-import Loader from '../../loader/Loader'; // Import your Loader component
+import { ThemeContext } from '../../../ThemeContext'; 
+import Loader from '../../loader/Loader'; 
 
 const Register = () => {
   const [firstName, setFirstName] = useState('');
@@ -18,7 +18,9 @@ const Register = () => {
   const [role, setRole] = useState('user');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { theme } = useContext(ThemeContext);
+
+  const { darkMode } = useContext(ThemeContext); // Use useContext to access darkMode
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,10 +43,11 @@ const Register = () => {
         role,
       });
 
-      console.log("Registration successful", response.data);
+      // console.log("Registration successful", response.data);
       toast.success("Registration successful! Please verify your email.");
-      navigate('/auth/login', { state: { email, verifyMethod: 'otp', showToast: true } });
-
+      setTimeout(() => {
+        navigate('/auth/login', { state: { email, verifyMethod: 'otp', showToast: true } });
+      }, 3000);
     } catch (error) {
       console.error("Registration error:", error);
       if (error.response) {
@@ -64,9 +67,10 @@ const Register = () => {
     <AuthLayout>
       <div className="flex items-center justify-center min-h-screen">
         <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-800 p-8 shadow-md rounded-lg w-full max-w-md transition">
-          <h2 className={`text-2xl font-bold mb-4 text-center ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+        <h2 className={`text-2xl font-bold mb-4 text-center ${darkMode ? 'text-white' : 'text-black'}`}>
             Register
           </h2>
+
           <input
             type="text"
             placeholder="First Name"
@@ -134,7 +138,7 @@ const Register = () => {
           <button type="submit" className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 transition" disabled={loading}>
             {loading ? 'Loading...' : 'Register'}
           </button>
-          {loading && <Loader />} 
+          {loading && <Loader />}
         </form>
       </div>
       <ToastContainer />
